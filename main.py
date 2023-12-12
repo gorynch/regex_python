@@ -1,5 +1,6 @@
 import re
 import csv
+import datetime
 
 from vars import file_name_raw, file_name_formated, pattern_all, str_replace, \
     str_pattern_empty_phone, index_from_diff
@@ -19,9 +20,10 @@ def write_file(f_n, contact_list):
 
 def format_data(input_data):
     res_str = ','.join(input_data[0]) + '\n'
+    headers_len = len(input_data[0])
     input_data.pop(0)
     for data in input_data:
-        if len(data) == len(input_data[0]):
+        if len(data) == headers_len:
             names = re.finditer(pattern_all,','.join(data))
             for n in names:
                 sub_names = f'{n.group(1)},{n.group(3)},{n.group(5)}'
@@ -62,6 +64,7 @@ def format_data(input_data):
 if __name__ == '__main__':
     print("Let's start")
     print()
+    start_time = datetime.datetime.now()
     contact_list_formated = format_data(read_file(file_name_raw))
     write_file(file_name_formated, contact_list_formated)
-    print('Done.')
+    print(f'Done in {(start_time - datetime.datetime.now()).microseconds/1000} ms')
